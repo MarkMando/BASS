@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BAScanner</string>
+    <string name="diagnostic_support_system">Diagnostic Support System</string>
+    <string name="ultrasound_analysis">Ultrasound Analysis</string>
+    <string name="mammography_analysis">Mammography Analysis</string>
+    <string name="exterior_examination">Exterior Examination</string>
+</resources>

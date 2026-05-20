@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F5F7FA">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/diagnostic_support_system"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="48dp" />
+
+    <Button
+        android:id="@+id/btn_ultrasound"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="@string/ultrasound_analysis"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_mammography"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="@string/mammography_analysis"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_exterior"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="@string/exterior_examination" />
+
+</LinearLayout>
