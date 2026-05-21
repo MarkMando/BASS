@@ -27,6 +27,8 @@ class AnalysisActivity : AppCompatActivity() {
     private lateinit var diagnosticEngine: DiagnosticEngine
     private lateinit var currentModality: Modality
     private lateinit var cameraExecutor: ExecutorService
+    private var cameraProvider: ProcessCameraProvider? = null
+    @Volatile private var isClosing = false
 
     private lateinit var viewFinder: PreviewView
     private lateinit var staticImageView: ImageView
@@ -83,7 +85,7 @@ class AnalysisActivity : AppCompatActivity() {
 
         // Init Engine & Camera Executor
         try {
-            diagnosticEngine = DiagnosticEngine(this, currentModality.modelFile, currentModality.inputSize)
+            diagnosticEngine = DiagnosticEngine(this, currentModality.modelFile)
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to initialize ML Engine", Toast.LENGTH_LONG).show()
             finish()
@@ -104,11 +106,12 @@ class AnalysisActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            val provider = cameraProviderFuture.get()
+            cameraProvider = provider
 
             // Viewfinder Preview
             val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(viewFinder.surfaceProvider)
+                it.surfaceProvider = viewFinder.surfaceProvider
             }
 
             // Image Analyzer
@@ -118,13 +121,19 @@ class AnalysisActivity : AppCompatActivity() {
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor) { imageProxy ->
+                        if (isClosing) {
+                            imageProxy.close()
+                            return@setAnalyzer
+                        }
                         val bitmap = imageProxy.toBitmap()
                         val probability = diagnosticEngine.analyzeImage(bitmap)
 
                         // Update UI (Only if Gallery image isn't currently active)
                         if (staticImageView.visibility == View.GONE) {
                             runOnUiThread {
-                                tvResult.text = "Live Probability: ${"%.2f".format(probability * 100)}%"
+                                if (!isClosing) {
+                                    tvResult.text = "Live Probability: ${"%.2f".format(probability * 100)}%"
+                                }
                             }
                         }
                         imageProxy.close()
@@ -132,8 +141,8 @@ class AnalysisActivity : AppCompatActivity() {
                 }
 
             try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalyzer)
+                provider.unbindAll()
+                provider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalyzer)
             } catch(exc: Exception) {
                 // Log failure
             }
@@ -141,6 +150,8 @@ class AnalysisActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        isClosing = true
+        cameraProvider?.unbindAll()
         super.onDestroy()
         cameraExecutor.shutdown()
         diagnosticEngine.close()

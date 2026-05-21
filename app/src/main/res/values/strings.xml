@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">BAScanner</string>
-    <string name="diagnostic_support_system">Diagnostic Support System</string>
+    <string name="app_name">BASS</string>
+    <string name="diagnostic_support_system">Breast Abnormality Screening Support</string>
     <string name="ultrasound_analysis">Ultrasound Analysis</string>
     <string name="mammography_analysis">Mammography Analysis</string>
     <string name="exterior_examination">Exterior Examination</string>
+    <string name="medical_disclaimer"><b>IMPORTANT:</b> This tool provides informational screening support only and is <b>NOT</b> a substitute for professional medical diagnosis. All positive results must be confirmed by a qualified healthcare provider. A negative result does not guarantee absence of disease, seek medical attention if symptoms persist.</string>
 </resources>
