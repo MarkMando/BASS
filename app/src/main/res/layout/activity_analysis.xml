@@ -9,7 +9,7 @@
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_result"
+        app:layout_constraintBottom_toTopOf="@+id/tv_modality_indicator"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -18,8 +18,28 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:scaleType="centerInside"
-        app:layout_constraintBottom_toTopOf="@+id/tv_result"
+        android:layerType="software"
+        app:layout_constraintBottom_toTopOf="@+id/tv_modality_indicator"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_modality_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@color/pink_accent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="MODALITY" />
 
     <TextView
         android:id="@+id/tv_result"
