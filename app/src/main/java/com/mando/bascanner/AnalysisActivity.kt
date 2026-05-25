@@ -38,6 +38,10 @@ class AnalysisActivity : AppCompatActivity() {
     private lateinit var tvResult: TextView
     private lateinit var tvModalityIndicator: TextView
 
+    // Smoothing state for live analysis
+    private var smoothedProbability = -1f
+    private val smoothingFactor = 0.15f // Adjust between 0.0 and 1.0 for more/less smoothing
+
     // 1. Camera Permission Handler
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -116,7 +120,7 @@ class AnalysisActivity : AppCompatActivity() {
                     val probability = diagnosticEngine.analyzeImage(finalBitmap)
                     runOnUiThread {
                         if (!isClosing) {
-                            tvResult.text = "Gallery Scan Probability: ${"%.2f".format(probability * 100)}%"
+                            tvResult.text = "Gallery Scan Malignancy Probability: ${"%.2f".format(probability * 100)}%"
                         }
                     }
                 }
@@ -207,17 +211,21 @@ class AnalysisActivity : AppCompatActivity() {
                         if (bitmap != null) {
                             val probability = diagnosticEngine.analyzeImage(bitmap)
 
+                            // Apply Exponential Moving Average (EMA) for smoothing
+                            if (smoothedProbability < 0) {
+                                smoothedProbability = probability
+                            } else {
+                                smoothedProbability = (probability * smoothingFactor) + (smoothedProbability * (1 - smoothingFactor))
+                            }
+
                             // Update UI (Only if Gallery image isn't currently active)
                             if (staticImageView.visibility == View.GONE) {
                                 runOnUiThread {
                                     if (!isClosing) {
-                                        tvResult.text = "Live Probability: ${"%.2f".format(probability * 100)}%"
+                                        tvResult.text = "Live Malignancy Probability: ${"%.2f".format(smoothedProbability * 100)}%"
                                     }
                                 }
                             }
-                            // If we created a scaled bitmap, we don't need to recycle here as it's passed to engine
-                            // but actually analyzeImage doesn't recycle it.
-                            // To be safe and avoid leaks since we are in a loop:
                             bitmap.recycle()
                         }
 

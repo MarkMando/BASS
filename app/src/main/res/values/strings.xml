@@ -5,4 +5,6 @@
     <string name="mammography_analysis">Mammography Analysis</string>
     <string name="exterior_examination">Exterior Examination</string>
     <string name="medical_disclaimer"><b>IMPORTANT:</b> This tool provides informational screening support only and is <b>NOT</b> a substitute for professional medical diagnosis. All positive results must be confirmed by a qualified healthcare provider. A negative result does not guarantee absence of disease, seek medical attention if symptoms persist.</string>
+    <string name="malignancy_probability_0">Malignancy Probability: 0%</string>
+    <string name="import_from_gallery">Import from Gallery</string>
 </resources>
